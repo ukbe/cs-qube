@@ -1,0 +1,234 @@
+apiVersion: kops.k8s.io/v1alpha2
+kind: Cluster
+metadata:
+  creationTimestamp: "2024-04-23T00:30:17Z"
+  generation: 6
+  name: k8s.refurral.com
+spec:
+  api:
+    loadBalancer:
+      class: Network
+      type: Internal
+  authorization:
+    rbac: {}
+  certManager:
+    enabled: true
+  channel: stable
+  cloudProvider: aws
+  clusterAutoscaler:
+    enabled: true
+    expander: least-waste
+  configBase: s3://kops-state-k8s-refurrral/k8s.refurral.com
+  etcdClusters:
+  - cpuRequest: 200m
+    etcdMembers:
+    - encryptedVolume: true
+      instanceGroup: control-plane-us-east-1a
+      name: a
+    - encryptedVolume: true
+      instanceGroup: control-plane-us-east-1b
+      name: b
+    - encryptedVolume: true
+      instanceGroup: control-plane-us-east-1c
+      name: c
+    manager:
+      backupRetentionDays: 90
+    memoryRequest: 100Mi
+    name: main
+  - cpuRequest: 100m
+    etcdMembers:
+    - encryptedVolume: true
+      instanceGroup: control-plane-us-east-1a
+      name: a
+    - encryptedVolume: true
+      instanceGroup: control-plane-us-east-1b
+      name: b
+    - encryptedVolume: true
+      instanceGroup: control-plane-us-east-1c
+      name: c
+    manager:
+      backupRetentionDays: 90
+    memoryRequest: 100Mi
+    name: events
+  iam:
+    allowContainerRegistry: true
+    legacy: false
+  kubelet:
+    anonymousAuth: false
+  kubernetesApiAccess:
+  - 0.0.0.0/0
+  - ::/0
+  kubernetesVersion: 1.28.6
+  masterPublicName: api.k8s.refurral.com
+  metricsServer:
+    enabled: true
+  networkCIDR: 172.20.0.0/16
+  networking:
+    calico: {}
+  nonMasqueradeCIDR: 100.64.0.0/10
+  sshAccess:
+  - 0.0.0.0/0
+  - ::/0
+  subnets:
+  - cidr: 172.20.64.0/18
+    name: us-east-1a
+    type: Private
+    zone: us-east-1a
+  - cidr: 172.20.128.0/18
+    name: us-east-1b
+    type: Private
+    zone: us-east-1b
+  - cidr: 172.20.192.0/18
+    name: us-east-1c
+    type: Private
+    zone: us-east-1c
+  - cidr: 172.20.0.0/21
+    name: utility-us-east-1a
+    type: Utility
+    zone: us-east-1a
+  - cidr: 172.20.8.0/21
+    name: utility-us-east-1b
+    type: Utility
+    zone: us-east-1b
+  - cidr: 172.20.16.0/21
+    name: utility-us-east-1c
+    type: Utility
+    zone: us-east-1c
+  topology:
+    bastion:
+      bastionPublicName: bastion.k8s.refurral.com
+    dns:
+      type: Public
+
+---
+
+apiVersion: kops.k8s.io/v1alpha2
+kind: InstanceGroup
+metadata:
+  creationTimestamp: "2024-04-23T18:57:02Z"
+  labels:
+    kops.k8s.io/cluster: k8s.refurral.com
+  name: bastions
+spec:
+  image: 099720109477/ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20240126
+  kubelet:
+    anonymousAuth: false
+  machineType: t3.micro
+  manager: CloudGroup
+  maxSize: 1
+  minSize: 1
+  nodeLabels:
+    kops.k8s.io/instancegroup: bastions
+  role: Bastion
+  subnets:
+  - us-east-1a
+  - us-east-1b
+  - us-east-1c
+
+---
+
+apiVersion: kops.k8s.io/v1alpha2
+kind: InstanceGroup
+metadata:
+  creationTimestamp: "2024-04-23T00:30:18Z"
+  labels:
+    kops.k8s.io/cluster: k8s.refurral.com
+  name: control-plane-us-east-1a
+spec:
+  image: 099720109477/ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20240126
+  machineType: t3.medium
+  maxSize: 1
+  minSize: 1
+  role: Master
+  subnets:
+  - us-east-1a
+
+---
+
+apiVersion: kops.k8s.io/v1alpha2
+kind: InstanceGroup
+metadata:
+  creationTimestamp: "2024-04-23T00:30:18Z"
+  labels:
+    kops.k8s.io/cluster: k8s.refurral.com
+  name: control-plane-us-east-1b
+spec:
+  image: 099720109477/ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20240126
+  machineType: t3.medium
+  maxSize: 1
+  minSize: 1
+  role: Master
+  subnets:
+  - us-east-1b
+
+---
+
+apiVersion: kops.k8s.io/v1alpha2
+kind: InstanceGroup
+metadata:
+  creationTimestamp: "2024-04-23T00:30:19Z"
+  labels:
+    kops.k8s.io/cluster: k8s.refurral.com
+  name: control-plane-us-east-1c
+spec:
+  image: 099720109477/ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20240126
+  machineType: t3.medium
+  maxSize: 1
+  minSize: 1
+  role: Master
+  subnets:
+  - us-east-1c
+
+---
+
+apiVersion: kops.k8s.io/v1alpha2
+kind: InstanceGroup
+metadata:
+  creationTimestamp: "2024-04-23T00:30:19Z"
+  labels:
+    kops.k8s.io/cluster: k8s.refurral.com
+  name: nodes-us-east-1a
+spec:
+  image: 099720109477/ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20240126
+  machineType: t3.medium
+  maxSize: 1
+  minSize: 1
+  role: Node
+  subnets:
+  - us-east-1a
+
+---
+
+apiVersion: kops.k8s.io/v1alpha2
+kind: InstanceGroup
+metadata:
+  creationTimestamp: "2024-04-23T00:30:19Z"
+  labels:
+    kops.k8s.io/cluster: k8s.refurral.com
+  name: nodes-us-east-1b
+spec:
+  image: 099720109477/ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20240126
+  machineType: t3.medium
+  maxSize: 1
+  minSize: 1
+  role: Node
+  subnets:
+  - us-east-1b
+
+---
+
+apiVersion: kops.k8s.io/v1alpha2
+kind: InstanceGroup
+metadata:
+  creationTimestamp: "2024-04-23T00:30:20Z"
+  labels:
+    kops.k8s.io/cluster: k8s.refurral.com
+  name: nodes-us-east-1c
+spec:
+  image: 099720109477/ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20240126
+  machineType: t3.medium
+  maxSize: 1
+  minSize: 1
+  role: Node
+  subnets:
+  - us-east-1c
