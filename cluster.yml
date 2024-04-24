@@ -137,7 +137,7 @@ metadata:
 spec:
   image: 099720109477/ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20240126
   machineType: t3.medium
-  maxSize: 1
+  maxSize: 3
   minSize: 1
   role: Master
   subnets:
@@ -155,7 +155,7 @@ metadata:
 spec:
   image: 099720109477/ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20240126
   machineType: t3.medium
-  maxSize: 1
+  maxSize: 3
   minSize: 1
   role: Master
   subnets:
@@ -173,7 +173,7 @@ metadata:
 spec:
   image: 099720109477/ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20240126
   machineType: t3.medium
-  maxSize: 1
+  maxSize: 3
   minSize: 1
   role: Master
   subnets:
@@ -191,11 +191,16 @@ metadata:
 spec:
   image: 099720109477/ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20240126
   machineType: t3.medium
-  maxSize: 1
+  maxSize: 5
   minSize: 1
+  mixedInstancesPolicy:
+    onDemandBaseCapacity: 1
+    onDemandPercentageAboveBaseCapacity: 50
+    spotAllocationStrategy: capacity-optimized
   role: Node
   subnets:
   - us-east-1a
+
 
 ---
 
@@ -209,8 +214,12 @@ metadata:
 spec:
   image: 099720109477/ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20240126
   machineType: t3.medium
-  maxSize: 1
+  maxSize: 5
   minSize: 1
+  mixedInstancesPolicy:
+    onDemandBaseCapacity: 1
+    onDemandPercentageAboveBaseCapacity: 50
+    spotAllocationStrategy: capacity-optimized
   role: Node
   subnets:
   - us-east-1b
@@ -227,8 +236,12 @@ metadata:
 spec:
   image: 099720109477/ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20240126
   machineType: t3.medium
-  maxSize: 1
+  maxSize: 5
   minSize: 1
+  mixedInstancesPolicy:
+    onDemandBaseCapacity: 1
+    onDemandPercentageAboveBaseCapacity: 50
+    spotAllocationStrategy: capacity-optimized
   role: Node
   subnets:
   - us-east-1c
