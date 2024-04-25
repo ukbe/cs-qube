@@ -89,7 +89,7 @@
                 </tr>
               </thead>
               <tbody>
-
+                {% if contents %}
                 {% for row in contents %}
                 <tr>
                   {% for cell in row %}
@@ -97,6 +97,14 @@
                   {% endfor %}
                 </tr>
                 {% endfor %}
+                {% else %}
+                <tr>
+                  <td> <em>
+                      &lt;empty&gt;
+                    </em>
+                  </td>
+                </tr>
+                {% endif %}
               </tbody>
             </table>
           </div>
