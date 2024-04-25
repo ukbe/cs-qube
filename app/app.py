@@ -19,15 +19,15 @@ def health_check():
     time.sleep(delay)
     app_state = get_app_state()
     if app_state == "ok":
-        return render_template("env.html", state=app_state, vars=os.environ.items())
+        return render_template("health.html", app_state=app_state, vars=os.environ.items())
 
-    return render_template("env.html", state=app_state, vars=os.environ.items()), 500
+    return render_template("health.html", app_state=app_state, vars=os.environ.items()), 500
 
 
 @app.route("/hiccup")
 def hiccup_for():
     duration = int(request.args.get("for", 5))
-    set_app_state("down")
+    set_app_state("hiccup")
     time.sleep(duration)
     set_app_state("ok")
 
@@ -39,7 +39,7 @@ def index():
     # This block is to imitate 500 on startup, so we know app is working as expected during demo. Not for production
     app_state = get_app_state()
     if app_state != "ok":
-        return render_template("loading.html"), 500
+        return render_template("error.html"), 500
 
     selected_file = request.args.get("select", "")
     contents = ""

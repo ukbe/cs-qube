@@ -1,126 +1,116 @@
-<!DOCTYPE html>
-<html>
+{% extends 'layout.html' %}
+{% block body %}
+<section class="section">
+  <div class="container">
+    <h1 class="title">
+      Heyo
+      <p class="subtitle">
+        <strong>CS</strong>-Qube!
+      </p>
+    </h1>
+    <div class="columns">
+      <div class="column is-full">
+        <div class="box">
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CS-Qube!</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
-</head>
-
-<body>
-  <section class="section">
-    <div class="container">
-      <h1 class="title">
-        Heyo
-        <p class="subtitle">
-          <strong>CS</strong>-Qube!
-        </p>
-      </h1>
-      <div class="columns">
-        <div class="column is-full">
-          <div class="box">
-
-            <form action="/" method="POST" enctype="multipart/form-data">
-              <div class="field is-grouped">
-                <div id="file-div" class="file has-name is-fullwidth">
-                  <label class="file-label">
-                    <input class="file-input" type="file" name="csv_file" />
-                    <span class="file-cta">
-                      <span class="file-icon">
-                        <i class="fas fa-upload"></i>
-                      </span>
-                      <span class="file-label"> Choose a file… </span>
+          <form action="/" method="POST" enctype="multipart/form-data">
+            <div class="field is-grouped">
+              <div id="file-div" class="file has-name is-fullwidth">
+                <label class="file-label">
+                  <input class="file-input" type="file" name="csv_file" />
+                  <span class="file-cta">
+                    <span class="file-icon">
+                      <i class="fas fa-upload"></i>
                     </span>
-                    <span class="file-name is-expanded"></span>
-                  </label>
-                </div>
-                <p class="control">
-                  <button pe="submit" class="button is-info">
-                    Upload
-                  </button>
-                </p>
+                    <span class="file-label"> Choose a file… </span>
+                  </span>
+                  <span class="file-name is-expanded"></span>
+                </label>
               </div>
-            </form>
-          </div>
-        </div>
-      </div>
-      <div class="columns">
-        <div class="column is-one-quarter">
-          <div class="box">
-
-            <table class="table is-fullwidth">
-              <thead>
-                <tr>
-                  <th>Files</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% if file_list %}
-                {% for ufile in file_list %}
-                <tr>
-                  <td><a href="?select={{ ufile }}">{{ ufile }}</a></td>
-                </tr>
-                {% endfor %}
-                {% else %}
-                <tr>
-                  <td> <em>
-                      &lt;empty&gt;
-                    </em>
-                  </td>
-                </tr>
-                {% endif %}
-
-              </tbody>
-            </table>
-
-          </div>
-        </div>
-        <div class="column">
-          <div class="box">
-            <p class="title is-5">Contents: {{ selected | default("not selected") }}
-            </p>
-            <table class="table is-fullwidth">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Item</th>
-                  <th>Price</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% if contents %}
-                {% for row in contents %}
-                <tr>
-                  {% for cell in row %}
-                  <td>{{ cell }}</td>
-                  {% endfor %}
-                </tr>
-                {% endfor %}
-                {% else %}
-                <tr>
-                  <td> <em>
-                      &lt;empty&gt;
-                    </em>
-                  </td>
-                </tr>
-                {% endif %}
-              </tbody>
-            </table>
-          </div>
+              <p class="control">
+                <button pe="submit" class="button is-info">
+                  Upload
+                </button>
+              </p>
+            </div>
+          </form>
         </div>
       </div>
     </div>
-  </section>
-  <script>
-    const fileInput = document.querySelector("#file-div input[type=file]");
-    fileInput.onchange = () => {
-      if (fileInput.files.length > 0) {
-        const fileName = document.querySelector("#file-div .file-name");
-        fileName.textContent = fileInput.files[0].name;
-      }
-    };
-  </script>
-</body>
+    <div class="columns">
+      <div class="column is-one-quarter">
+        <div class="box">
 
-</html>
+          <table class="table is-fullwidth">
+            <thead>
+              <tr>
+                <th>Files</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% if file_list %}
+              {% for ufile in file_list %}
+              <tr>
+                <td><a href="?select={{ ufile }}">{{ ufile }}</a></td>
+              </tr>
+              {% endfor %}
+              {% else %}
+              <tr>
+                <td> <em>
+                    &lt;empty&gt;
+                  </em>
+                </td>
+              </tr>
+              {% endif %}
+
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+      <div class="column">
+        <div class="box">
+          <p class="title is-5">Contents: {{ selected | default("not selected") }}
+          </p>
+          <table class="table is-fullwidth">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Item</th>
+                <th>Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% if contents %}
+              {% for row in contents %}
+              <tr>
+                {% for cell in row %}
+                <td>{{ cell }}</td>
+                {% endfor %}
+              </tr>
+              {% endfor %}
+              {% else %}
+              <tr>
+                <td> <em>
+                    &lt;empty&gt;
+                  </em>
+                </td>
+              </tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const fileInput = document.querySelector("#file-div input[type=file]");
+  fileInput.onchange = () => {
+    if (fileInput.files.length > 0) {
+      const fileName = document.querySelector("#file-div .file-name");
+      fileName.textContent = fileInput.files[0].name;
+    }
+  };
+</script>
+{% endblock %}
