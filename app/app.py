@@ -11,6 +11,9 @@ app = Flask(__name__)
 s3 = boto3.client("s3")
 
 STATE_FILE = "state.txt"
+HYPO_APP_LOAD_DURATION = os.environ.get("HYPO_APP_LOAD_DURATION", 15)  # seconds
+DEFAULT_HICCUP_DURATION = os.environ.get("DEFAULT_HICCUP_DURATION", 5)  # seconds
+S3_BUCKET = os.environ.get("S3_BUCKET")
 
 
 @app.route("/health")
@@ -20,13 +23,16 @@ def health_check():
     app_state = get_app_state()
     if app_state == "ok":
         return render_template("health.html", app_state=app_state, vars=os.environ.items())
+    elif app_state == "loading":
+        time.sleep(HYPO_APP_LOAD_DURATION)
+        set_app_state("ok")
 
     return render_template("health.html", app_state=app_state, vars=os.environ.items()), 500
 
 
 @app.route("/hiccup")
 def hiccup_for():
-    duration = int(request.args.get("for", 5))
+    duration = int(request.args.get("for", DEFAULT_HICCUP_DURATION))
     set_app_state("hiccup")
     time.sleep(duration)
     set_app_state("ok")
@@ -36,9 +42,12 @@ def hiccup_for():
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    # This block is to imitate 500 on startup, so we know app is working as expected during demo. Not for production
+    # The purpose of including this block is to imitate a failure like db connection error.
     app_state = get_app_state()
-    if app_state != "ok":
+    if app_state not in (
+        "ok",
+        "loading",
+    ):
         return render_template("error.html"), 500
 
     selected_file = request.args.get("select", "")
@@ -56,13 +65,13 @@ def index():
             selected_file = uploaded_file.filename
 
     if selected_file:
-        object = s3.get_object(Bucket=os.environ.get("S3_BUCKET"), Key=selected_file)
+        object = s3.get_object(Bucket=S3_BUCKET, Key=selected_file)
         contents = filter(
             None, list(csv.reader(object["Body"].read().decode("utf-8").splitlines()))
         )
 
     objects = s3.list_objects_v2(
-        Bucket=os.environ.get("S3_BUCKET"),
+        Bucket=S3_BUCKET,
     )
     uploaded_file_list = (
         map(lambda obj: obj["Key"], objects["Contents"]) if objects["KeyCount"] > 0 else []
@@ -76,7 +85,7 @@ def index():
 def process(file):
     s3.upload_fileobj(
         file,
-        os.environ.get("S3_BUCKET"),
+        S3_BUCKET,
         file.filename,
         ExtraArgs={"ContentType": file.content_type},
     )

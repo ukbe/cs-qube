@@ -1,15 +1,16 @@
-FROM python:3-alpine
+FROM python:3.12.3-alpine
 
 ENV S3_BUCKET=
 ENV AWS_ACCESS_KEY_ID=
 ENV AWS_SECRET_ACCESS_KEY=
+ENV HYPO_APP_LOAD_DURATION=15
+ENV DEFAULT_HICCUP_DURATION=5
 
 WORKDIR /app
 
-COPY requirements.txt .
-RUN pip install -r requirements.txt
+COPY app/ .
 
-COPY . .
+RUN pip install -r requirements.txt
 
 EXPOSE 5000 
 
