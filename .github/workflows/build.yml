@@ -1,0 +1,25 @@
+name: "CS-Cube Docker Image"
+
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build the Docker image
+        env:
+          DOCKER_BUILDKIT: 1
+        run: >
+          docker login -u ukbe -p ${{ secrets.DOCKER_HUB_TOKEN }}
+
+          docker build
+          --platform linux/amd64
+          --file Dockerfile
+          --tag ukbe/cs-qube:latest
+          . &&
+          docker push ukbe/cs-qube:latest
