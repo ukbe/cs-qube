@@ -11,10 +11,12 @@ app = Flask(__name__)
 s3 = boto3.client("s3")
 
 STATE_FILE = "state.txt"
-HYPO_APP_LOAD_DURATION = os.environ.get("HYPO_APP_LOAD_DURATION", 15)  # seconds
-DEFAULT_HICCUP_DURATION = os.environ.get("DEFAULT_HICCUP_DURATION", 5)  # seconds
+HYPO_APP_LOAD_DURATION = int(os.environ.get("HYPO_APP_LOAD_DURATION", 15))  # seconds
+DEFAULT_HICCUP_DURATION = int(os.environ.get("DEFAULT_HICCUP_DURATION", 5))  # seconds
 S3_BUCKET = os.environ.get("S3_BUCKET")
 
+if S3_BUCKET == None:
+    raise EnvironmentError("S3_BUCKET is not set")
 
 @app.route("/health")
 def health_check():
