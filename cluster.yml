@@ -2,13 +2,13 @@ apiVersion: kops.k8s.io/v1alpha2
 kind: Cluster
 metadata:
   creationTimestamp: "2024-04-23T00:30:17Z"
-  generation: 6
+  generation: 9
   name: k8s.refurral.com
 spec:
   api:
     loadBalancer:
       class: Network
-      type: Internal
+      type: Public
   authorization:
     rbac: {}
   certManager:
@@ -18,7 +18,7 @@ spec:
   clusterAutoscaler:
     enabled: true
     expander: least-waste
-  configBase: s3://kops-state-k8s-refurrral/k8s.refurral.com
+  configBase: s3://kops-state-refurral/k8s.refurral.com
   etcdClusters:
   - cpuRequest: 200m
     etcdMembers:
@@ -137,7 +137,7 @@ metadata:
 spec:
   image: 099720109477/ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20240126
   machineType: t3.medium
-  maxSize: 3
+  maxSize: 1
   minSize: 1
   role: Master
   subnets:
@@ -155,7 +155,7 @@ metadata:
 spec:
   image: 099720109477/ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20240126
   machineType: t3.medium
-  maxSize: 3
+  maxSize: 1
   minSize: 1
   role: Master
   subnets:
@@ -173,7 +173,7 @@ metadata:
 spec:
   image: 099720109477/ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20240126
   machineType: t3.medium
-  maxSize: 3
+  maxSize: 1
   minSize: 1
   role: Master
   subnets:
@@ -194,13 +194,10 @@ spec:
   maxSize: 5
   minSize: 1
   mixedInstancesPolicy:
-    onDemandBaseCapacity: 1
-    onDemandPercentageAboveBaseCapacity: 50
     spotAllocationStrategy: capacity-optimized
   role: Node
   subnets:
   - us-east-1a
-
 
 ---
 
@@ -217,8 +214,6 @@ spec:
   maxSize: 5
   minSize: 1
   mixedInstancesPolicy:
-    onDemandBaseCapacity: 1
-    onDemandPercentageAboveBaseCapacity: 50
     spotAllocationStrategy: capacity-optimized
   role: Node
   subnets:
@@ -239,8 +234,6 @@ spec:
   maxSize: 5
   minSize: 1
   mixedInstancesPolicy:
-    onDemandBaseCapacity: 1
-    onDemandPercentageAboveBaseCapacity: 50
     spotAllocationStrategy: capacity-optimized
   role: Node
   subnets:
