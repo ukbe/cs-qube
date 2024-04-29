@@ -118,3 +118,5 @@ In order to remove the CS-Qube deployment on your Kubernetes cluster run the com
 ```bash
 ansible-playbook -i inventory/dev deploy.yml -t undeploy
 ```
+
+Once the application is deployed, it should be accessible via https://dev.localtest.me
