@@ -1,0 +1,16 @@
+---
+- debug:
+    msg: "{{ ('undeploy' in ansible_run_tags) | ternary ('Uninstalling', 'Installing') }} CS-Qube on {{ env_label }} Environment"
+  tags: always
+
+- name: "{{ ('undeploy' in ansible_run_tags) | ternary ('Uninstalling', 'Installing') }} Helm Package: cs-qube"
+  kubernetes.core.helm:
+    name: "{{ app_name }}"
+    chart_ref: cs-qube
+    chart_version: "{{ csqube_version}}"
+    values: "{{ csqube_values }}"
+    kubeconfig: "{{ k8s.config_path }}"
+    namespace: "{{ k8s.namespace }}"
+    create_namespace: "{{ k8s.create_namespace }}"
+    state: "{{ ('undeploy' in ansible_run_tags) | ternary('absent', 'present') }}"
+  tags: always

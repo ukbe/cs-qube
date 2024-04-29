@@ -1,0 +1,64 @@
+env: prod
+env_label: Production
+
+app_name: cs-qube-prod
+
+k8s:
+  config_path: ~/.kube/config
+  context: minikube
+  namespace: cs-qube-prod
+  create_namespace: true
+
+csqube_version: 1.0
+
+csqube_values:
+  deployment:
+    replicas: 3
+    restartPolicy: Always
+    terminationGracePeriodSeconds: 30
+  app:
+    name: cs-qube
+    image: ukbe/cs-qube:latest
+    imagePullPolicy: Always
+    requests:
+      cpu: 30m
+      memory: 400Mi
+    limits:
+      cpu: 300m
+      memory: 4000Mi
+    s3Bucket: cs-qube-files-prod
+    credentials:
+      access_key_id: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') | b64encode }}"
+      secret_access_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') | b64encode }}"
+  nginx:
+    requests:
+      cpu: 30m
+      memory: 400Mi
+    limits:
+      cpu: 300m
+      memory: 4000Mi
+  persistentVolume:
+    name: static-files
+    storageClassName: local-storage
+    capacity: 1Gi
+    hostPath: /data/static
+  persistentVolumeClaim:
+    name: static-files
+  service:
+    port: 80
+    targetPort: 80
+  job:
+    ttlSecondsAfterFinished: 100
+    activeDeadlineSeconds: 60
+    requests:
+      cpu: 30m
+      memory: 400Mi
+    limits:
+      cpu: 300m
+      memory: 4000Mi
+    restartPolicy: OnFailure
+    backoffLimit: 3
+  ingress:
+    host: app.localtest.me
+    path: /
+    pathType: Prefix

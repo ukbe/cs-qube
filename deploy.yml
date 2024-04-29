@@ -1,0 +1,7 @@
+---
+- name: "{{ ('undeploy' in ansible_run_tags) | ternary ('Undeploy', 'Deploy') }} Application"
+  hosts: localhost
+  gather_facts: False
+  roles:
+    - cs-qube
+  tags: always
