@@ -1,0 +1,51 @@
+
+deployment:
+  replicas: 3
+  restartPolicy: Always
+  terminationGracePeriodSeconds: 30
+app:
+  name: cs-qube
+  image: ukbe/cs-qube:latest
+  imagePullPolicy: Always
+  requests:
+    cpu: 30m
+    memory: 400Mi
+  limits:
+    cpu: 300m
+    memory: 4000Mi
+  s3Bucket: cs-qube-files
+  credentials:
+    access_key_id: YWJj
+    secret_access_key: YWJj
+nginx:
+  requests:
+    cpu: 30m
+    memory: 400Mi
+  limits:
+    cpu: 300m
+    memory: 4000Mi
+persistentVolume:
+  name: static-files
+  storageClassName: local-storage
+  capacity: 1Gi
+  hostPath: /data/static
+persistentVolumeClaim:
+  name: static-files
+service:
+  port: 80
+  targetPort: 80
+job:
+  ttlSecondsAfterFinished: 100
+  activeDeadlineSeconds: 60
+  requests:
+    cpu: 30m
+    memory: 400Mi
+  limits:
+    cpu: 300m
+    memory: 4000Mi
+  restartPolicy: OnFailure
+  backoffLimit: 3
+ingress:
+  host: localtest.me
+  path: /
+  pathType: Prefix

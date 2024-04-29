@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: init-static-files
+spec:
+  ttlSecondsAfterFinished: {{.Values.job.ttlSecondsAfterFinished}}
+  activeDeadlineSeconds: {{.Values.job.activeDeadlineSeconds}}
+  template:
+    spec:
+      volumes:
+        - name: static-files
+          persistentVolumeClaim:
+            claimName: static-files
+      containers:
+        - name: cs-qube
+          image: {{.Values.app.image}}
+          command: ["sh", "-c", "cp -r ./static/* /data/static/"]
+          imagePullPolicy: {{.Values.app.imagePullPolicy}}
+          volumeMounts:
+            - mountPath: /data/static
+              name: static-files
+          resources:
+            requests:
+              cpu: {{.Values.job.requests.cpu}}
+              memory: {{.Values.job.requests.memory}}
+            limits:
+              cpu: {{.Values.job.limits.cpu}}
+              memory: {{.Values.job.limits.memory}}
+
+      restartPolicy: {{.Values.job.restartPolicy}}
+  backoffLimit: {{.Values.job.backoffLimit}}

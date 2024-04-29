@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cs-qube
+data:
+  S3_BUCKET: {{.Values.app.s3Bucket}}
+  HYPO_APP_LOAD_DURATION: "15"
+  DEFAULT_HICCUP_DURATION: "5"
