@@ -20,7 +20,7 @@ spec:
       volumes:
         - name: static-files
           persistentVolumeClaim:
-            claimName: static-files
+            claimName: {{.Values.persistentVolumeClaim.name}}
         - name: nginx-config
           configMap:
             name: nginx-config

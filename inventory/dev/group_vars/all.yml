@@ -26,7 +26,7 @@ csqube_values:
     limits:
       cpu: 300m
       memory: 4000Mi
-    s3Bucket: cs-qube-files
+    s3Bucket: cs-qube-files-dev
     credentials:
       access_key_id: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') | b64encode }}"
       secret_access_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') | b64encode }}"
@@ -38,10 +38,10 @@ csqube_values:
       cpu: 300m
       memory: 4000Mi
   persistentVolume:
-    name: static-files
+    name: static-files-dev
     storageClassName: local-storage
     capacity: 1Gi
-    hostPath: /data/static
+    hostPath: /data/static-dev
   persistentVolumeClaim:
     name: static-files
   service:

@@ -10,7 +10,7 @@ spec:
       volumes:
         - name: static-files
           persistentVolumeClaim:
-            claimName: static-files
+            claimName: {{.Values.persistentVolumeClaim.name}}
       containers:
         - name: cs-qube
           image: {{.Values.app.image}}

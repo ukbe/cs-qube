@@ -38,12 +38,12 @@ csqube_values:
       cpu: 300m
       memory: 4000Mi
   persistentVolume:
-    name: static-files
+    name: static-files-qa
     storageClassName: local-storage
     capacity: 1Gi
-    hostPath: /data/static
+    hostPath: /data/static-qa
   persistentVolumeClaim:
-    name: static-files
+    name: static-files-qa
   service:
     port: 80
     targetPort: 80
