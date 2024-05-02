@@ -30,7 +30,7 @@ Kubernetes cluster deployment is handled by preparing a `kops` cluster configura
 
 ### Deployment
 
-[Deploying Kubernetes clusters on AWS](https://kops.sigs.k8s.io/getting_started/aws/) using `kops` requires an S3 state bucket to be created with ]specific configuration](https://kops.sigs.k8s.io/getting_started/aws/#cluster-state-store).
+[Deploying Kubernetes clusters on AWS](https://kops.sigs.k8s.io/getting_started/aws/) using `kops` requires an S3 state bucket to be created with [specific configuration](https://kops.sigs.k8s.io/getting_started/aws/#cluster-state-store).
 
 Create the state bucket
 
